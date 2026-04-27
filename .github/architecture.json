@@ -1,0 +1,134 @@
+{
+  "project": "OneKrungsri Corporate Portal",
+  "description": "Monorepo: Next.js React web app + Go BFF microservices",
+
+  "frontend": {
+    "framework": "Next.js 15 (React 19, TypeScript, Tailwind CSS, shadcn/ui)",
+    "root": "frontend/src/",
+    "entryPoints": ["app/layout.tsx", "app/page.tsx"],
+    "features": {
+      "login": "features/login/",
+      "welcome": "features/welcome/",
+      "workflowManagement": "features/workflow-management/",
+      "jobInfoDetails": "features/job-info/"
+    },
+    "app": {
+      "layout":     "app/layout.tsx",
+      "page":       "app/page.tsx",
+      "globalsCss": "theme/globals.scss",
+      "actions":    "app/login/actions.ts",
+      "images":     "app/images/",
+      "workflowManagement": "app/workflow-management/page.tsx",
+      "jobInfoDetails": "app/workflow-management/[jobId]/page.tsx"
+    },
+    "components": {
+      "shared":     "components/",
+      "topNavBar":  "components/top-nav-bar.tsx",
+      "sidebar":    "components/sidebar.tsx"
+    },
+    "contexts": {
+      "language":   "contexts/language-context.tsx"
+    },
+    "hooks": {
+      "shared":     "hooks/",
+      "useMobile":  "hooks/use-mobile.tsx"
+    },
+    "lib": {
+      "utils":      "lib/utils.ts",
+      "data":       "lib/data.ts",
+      "placeholder":"lib/placeholder-images.ts"
+    },
+    "config": {
+      "packageJson":    "frontend/package.json",
+      "tsconfig":       "frontend/tsconfig.json",
+      "tailwind":       "frontend/tailwind.config.ts",
+      "postcss":        "frontend/postcss.config.mjs",
+      "nextConfig":     "frontend/next.config.ts",
+      "componentsJson": "frontend/components.json"
+    }
+  },
+
+  "backend": {
+    "language": "Go 1.23",
+    "root": "backend/oneks-auth-bff-service/",
+    "entryPoint": "cmd/server/main.go",
+    "layers": {
+      "handler":    "internal/handler/",
+      "service":    "internal/service/",
+      "repository": "internal/repository/",
+      "model":      "internal/model/",
+      "constant":   "internal/constant/",
+      "config":     "internal/config/",
+      "middleware":  "internal/middleware/",
+      "router":     "internal/router/"
+    },
+    "pkg": {
+      "apperror":   "pkg/apperror/"
+    },
+    "deploy": {
+      "dockerfile": "deploy/Dockerfile",
+      "migrations": "deploy/migrations/"
+    },
+    "config": {
+      "goMod":      "backend/oneks-auth-bff-service/go.mod",
+      "makefile":   "backend/oneks-auth-bff-service/Makefile"
+    },
+    "services": {
+      "auth": {
+        "root": "backend/oneks-auth-bff-service/",
+        "port": 8087,
+        "routePrefix": "/rest/api/v1/auth"
+      },
+      "workflow": {
+        "root": "backend/oneks-workflow-bff-service/",
+        "port": 8088,
+        "routePrefix": "/rest/api/v1/backendForFrontends/workflow",
+        "openApiSpec": "backend/oneks-workflow-bff-service/deploy/openapi-workflow.yaml",
+        "apiContract": "backend/oneks-workflow-bff-service/deploy/api-contract-workflow.json"
+      },
+      "jobInfo": {
+        "root": "backend/oneks-job-info-bff-service/",
+        "port": 8089,
+        "routePrefix": "/rest/api/v1/backendForFrontends/job-info",
+        "openApiSpec": "frontend/generator-project/swagger/job-info.json"
+      }
+    }
+  },
+
+  "agents": {
+    "directory": ".github/agents/",
+    "pipeline": "IBM Dev → ask user to choose pipeline: frontend-only (Figma Reader → Frontend → Code Reviewer) | backend-only (Figma Reader → API Designer → Backend → Code Reviewer) | full-stack (Figma Reader → API Designer → Backend → Frontend → API Client Generator → Code Reviewer)",
+    "agents": [
+      "orchestrator.agent.md",
+      "figma-reader.agent.md",
+      "api-designer.agent.md",
+      "fe.agent.md",
+      "be.agent.md",
+      "api-client-generator.agent.md",
+      "code-reviewer.agent.md"
+    ]
+  },
+
+  "keyFiles": {
+    "feLayout":         "frontend/src/app/layout.tsx",
+    "fePage":           "frontend/src/app/page.tsx",
+    "feGlobalsCss":     "frontend/src/theme/globals.scss",
+    "feLanguageCtx":    "frontend/src/contexts/language-context.tsx",
+    "feTranslations":   "frontend/src/lib/data.ts",
+    "feUtils":          "frontend/src/lib/utils.ts",
+    "feTailwindConfig": "frontend/tailwind.config.ts",
+    "feComponentsJson": "frontend/components.json",
+    "beMain":               "backend/oneks-auth-bff-service/cmd/server/main.go",
+    "beConfig":             "backend/oneks-auth-bff-service/internal/config/config.go",
+    "beRouter":             "backend/oneks-auth-bff-service/internal/router/router.go",
+    "beGoMod":              "backend/oneks-auth-bff-service/go.mod",
+    "beWorkflowMain":       "backend/oneks-workflow-bff-service/cmd/server/main.go",
+    "beWorkflowConfig":     "backend/oneks-workflow-bff-service/internal/config/config.go",
+    "beWorkflowRouter":     "backend/oneks-workflow-bff-service/internal/router/router.go",
+    "beWorkflowHandler":    "backend/oneks-workflow-bff-service/internal/handler/workflow_handler.go",
+    "beWorkflowService":    "backend/oneks-workflow-bff-service/internal/service/workflow_service.go",
+    "beWorkflowRepo":       "backend/oneks-workflow-bff-service/internal/repository/workflow_repo.go",
+    "beWorkflowMigration":  "backend/oneks-workflow-bff-service/deploy/migrations/001_create_workflow_jobs.sql",
+    "beWorkflowGoMod":      "backend/oneks-workflow-bff-service/go.mod"
+  }
+}

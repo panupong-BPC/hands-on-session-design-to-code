@@ -1,0 +1,10 @@
+{
+  "name": "corp-portal-api-client-generator",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Swagger merge and TypeScript API client generation for the React frontend.",
+  "type": "module",
+  "scripts": {
+    "generate:client": "./gen-client-api.sh"
+  }
+}

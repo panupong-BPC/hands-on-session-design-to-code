@@ -1,0 +1,1056 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "OneKS Job Info BFF API",
+    "description": "BFF endpoints for the job-info-details feature — oneks-auth-bff-service",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8089",
+      "description": "Local development server"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "JobInfo",
+      "description": "Job info details, CFA info, loan applicants, loan details, collateral, and contracts"
+    }
+  ],
+  "paths": {
+    "/rest/api/v1/backendForFrontends/job-info/{jobId}": {
+      "get": {
+        "summary": "Get job information details",
+        "description": "Fetch complete job information including general info, CFA info, loan applicants, loan details, collateral, and contracts. userId is extracted from JWT claims.",
+        "operationId": "getJobInfoDetails",
+        "tags": [
+          "JobInfo"
+        ],
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}[0-9]{9}$"
+            },
+            "description": "Job identifier. Format: 3 uppercase letters + 9 digits",
+            "example": "ABC000000001"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Job info details retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/APIResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/JobInfoGetResponse"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request — invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid JWT token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Job not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update job information",
+        "description": "Update job information fields including general info and CFA info. Only provided fields are updated (partial update). userId extracted from JWT.",
+        "operationId": "updateJobInfo",
+        "tags": [
+          "JobInfo"
+        ],
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}[0-9]{9}$"
+            },
+            "description": "Job identifier. Format: 3 uppercase letters + 9 digits",
+            "example": "ABC000000001"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JobInfoUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Job info updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/APIResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/JobInfoGetResponse"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rest/api/v1/backendForFrontends/job-info/{jobId}/contracts": {
+      "get": {
+        "summary": "Get list of contracts for a job",
+        "description": "Fetch list of contracts with document links and review status. Contracts are grouped by type.",
+        "operationId": "getJobContracts",
+        "tags": [
+          "JobInfo"
+        ],
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}[0-9]{9}$"
+            },
+            "description": "Job identifier. Format: 3 uppercase letters + 9 digits",
+            "example": "ABC000000001"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Contract list retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/APIResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/JobContractsGetResponse"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rest/api/v1/backendForFrontends/job-info/{jobId}/contracts/{contractId}/review": {
+      "patch": {
+        "summary": "Mark contract as reviewed",
+        "description": "Mark a contract as reviewed. The handler must verify the contract belongs to the job.",
+        "operationId": "reviewContract",
+        "tags": [
+          "JobInfo"
+        ],
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}[0-9]{9}$"
+            },
+            "description": "Job identifier. Format: 3 uppercase letters + 9 digits",
+            "example": "ABC000000001"
+          },
+          {
+            "name": "contractId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Contract identifier",
+            "example": "CTR001"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContractReviewRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Contract review status updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/APIResponse"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/ContractReviewResponse"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "APIResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "success"
+          },
+          "data": {
+            "type": "object",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "example": ""
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "status",
+          "code",
+          "title",
+          "message"
+        ],
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "error"
+          },
+          "code": {
+            "type": "string",
+            "example": "B400",
+            "description": "Error code (e.g., B400, B401, B404, B500)"
+          },
+          "title": {
+            "type": "string",
+            "example": "Bad Request"
+          },
+          "message": {
+            "type": "string",
+            "example": "Invalid request parameters"
+          }
+        }
+      },
+      "JobInfoGetResponse": {
+        "type": "object",
+        "required": [
+          "jobId",
+          "statusBadges",
+          "generalInfo",
+          "cfaInfo",
+          "loanApplicants",
+          "loanDetails",
+          "collateralInfo",
+          "contracts"
+        ],
+        "properties": {
+          "jobId": {
+            "type": "string",
+            "example": "ABC000000001"
+          },
+          "statusBadges": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "Pending Review",
+              "High Priority"
+            ]
+          },
+          "generalInfo": {
+            "$ref": "#/components/schemas/GeneralInfo"
+          },
+          "cfaInfo": {
+            "$ref": "#/components/schemas/CfaInfo"
+          },
+          "loanApplicants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LoanApplicant"
+            }
+          },
+          "loanDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LoanDetail"
+            }
+          },
+          "collateralInfo": {
+            "$ref": "#/components/schemas/CollateralInfo"
+          },
+          "contracts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Contract"
+            }
+          }
+        }
+      },
+      "GeneralInfo": {
+        "type": "object",
+        "properties": {
+          "branch": {
+            "type": "string",
+            "example": "Bangkok Central Branch"
+          },
+          "loanContractDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2026-03-15",
+            "nullable": true
+          },
+          "spouseConsentDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2026-03-15",
+            "nullable": true
+          },
+          "guaranteeContractDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2026-03-15",
+            "nullable": true
+          },
+          "mortgageDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2026-03-20",
+            "nullable": true
+          },
+          "appraisalPrice": {
+            "type": "number",
+            "format": "double",
+            "description": "Appraisal price in Thai Baht",
+            "example": 5000000,
+            "nullable": true
+          },
+          "salePrice": {
+            "type": "number",
+            "format": "double",
+            "description": "Sale price in Thai Baht",
+            "example": 4800000,
+            "nullable": true
+          }
+        }
+      },
+      "CfaInfo": {
+        "type": "object",
+        "properties": {
+          "totalCreditOld": {
+            "type": "number",
+            "format": "double",
+            "description": "Previous total credit in Thai Baht",
+            "example": 2500000,
+            "nullable": true
+          },
+          "totalCreditNew": {
+            "type": "number",
+            "format": "double",
+            "description": "New total credit in Thai Baht",
+            "example": 3000000,
+            "nullable": true
+          },
+          "creditChange": {
+            "type": "number",
+            "format": "double",
+            "description": "Change in credit in Thai Baht",
+            "example": 500000,
+            "nullable": true
+          },
+          "cfaOldDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2025-01-15",
+            "nullable": true
+          },
+          "cfaCurrentRound": {
+            "type": "integer",
+            "example": 2,
+            "nullable": true
+          },
+          "debtPeriodOld": {
+            "type": "integer",
+            "description": "Previous debt period in months",
+            "example": 240,
+            "nullable": true
+          },
+          "debtPeriodNew": {
+            "type": "integer",
+            "description": "New debt period in months",
+            "example": 300,
+            "nullable": true
+          }
+        }
+      },
+      "LoanApplicant": {
+        "type": "object",
+        "required": [
+          "fullName",
+          "nationalId"
+        ],
+        "properties": {
+          "fullName": {
+            "type": "string",
+            "example": "นายสมชาย ใจดี"
+          },
+          "nationalId": {
+            "type": "string",
+            "example": "1234567890123"
+          },
+          "age": {
+            "type": "integer",
+            "example": 35,
+            "nullable": true
+          },
+          "nationality": {
+            "type": "string",
+            "example": "Thai",
+            "nullable": true
+          },
+          "parents": {
+            "type": "string",
+            "example": "นายสมศักดิ์ ใจดี, นางสมหญิง ใจดี",
+            "nullable": true
+          },
+          "maritalStatus": {
+            "type": "string",
+            "example": "Married",
+            "nullable": true
+          },
+          "spouseName": {
+            "type": "string",
+            "example": "นางสาวสมใจ ใจดี",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "example": "0812345678",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "example": "123 ถนนสุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพมหานคร 10110",
+            "nullable": true
+          },
+          "borrowerType": {
+            "type": "string",
+            "example": "Primary Borrower",
+            "nullable": true
+          },
+          "collateralOwner": {
+            "type": "boolean",
+            "example": true,
+            "nullable": true
+          }
+        }
+      },
+      "LoanDetail": {
+        "type": "object",
+        "properties": {
+          "loanType": {
+            "type": "string",
+            "example": "Home Loan",
+            "nullable": true
+          },
+          "loanAmount": {
+            "type": "number",
+            "format": "double",
+            "description": "Loan amount in Thai Baht",
+            "example": 3000000,
+            "nullable": true
+          },
+          "interestRate": {
+            "type": "number",
+            "format": "double",
+            "description": "Interest rate in percent",
+            "example": 5.5,
+            "nullable": true
+          },
+          "interestType": {
+            "type": "string",
+            "example": "Fixed",
+            "nullable": true
+          },
+          "interestDifference": {
+            "type": "number",
+            "format": "double",
+            "description": "Interest rate difference in percent",
+            "example": 0.25,
+            "nullable": true
+          },
+          "loanPeriod": {
+            "type": "integer",
+            "description": "Loan period in months",
+            "example": 300,
+            "nullable": true
+          },
+          "installmentAmount": {
+            "type": "number",
+            "format": "double",
+            "description": "Monthly installment amount in Thai Baht",
+            "example": 18000,
+            "nullable": true
+          },
+          "paymentDay": {
+            "type": "integer",
+            "description": "Day of month for payment (1-31)",
+            "example": 5,
+            "nullable": true
+          },
+          "firstPaymentDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2026-05-05",
+            "nullable": true
+          },
+          "paymentMethod": {
+            "type": "string",
+            "example": "Auto Debit",
+            "nullable": true
+          },
+          "paymentAccounts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "1234567890"
+            ],
+            "nullable": true
+          },
+          "disbursementAmount": {
+            "type": "number",
+            "format": "double",
+            "description": "Total disbursement amount in Thai Baht",
+            "example": 3000000,
+            "nullable": true
+          },
+          "disbursedAmount": {
+            "type": "number",
+            "format": "double",
+            "description": "Already disbursed amount in Thai Baht",
+            "example": 0,
+            "nullable": true
+          },
+          "receivingMethod": {
+            "type": "string",
+            "example": "Transfer",
+            "nullable": true
+          },
+          "receivingAccounts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "9876543210"
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "CollateralInfo": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CollateralItem"
+            }
+          }
+        }
+      },
+      "CollateralItem": {
+        "type": "object",
+        "properties": {
+          "collateralId": {
+            "type": "string",
+            "example": "COL001"
+          },
+          "collateralType": {
+            "type": "string",
+            "example": "Land and House",
+            "nullable": true
+          },
+          "titleDeedNumber": {
+            "type": "string",
+            "example": "1234/2566",
+            "nullable": true
+          },
+          "landArea": {
+            "type": "string",
+            "example": "50 ตร.ว.",
+            "nullable": true
+          },
+          "appraisalPrice": {
+            "type": "number",
+            "format": "double",
+            "description": "Appraisal price in Thai Baht",
+            "example": 5000000,
+            "nullable": true
+          },
+          "sellingPrice": {
+            "type": "number",
+            "format": "double",
+            "description": "Selling price in Thai Baht",
+            "example": 4800000,
+            "nullable": true
+          },
+          "location": {
+            "type": "string",
+            "example": "Pathum Thani",
+            "nullable": true
+          }
+        }
+      },
+      "Contract": {
+        "type": "object",
+        "required": [
+          "contractId",
+          "contractType",
+          "contractTitle",
+          "documents"
+        ],
+        "properties": {
+          "contractId": {
+            "type": "string",
+            "example": "CTR001"
+          },
+          "contractType": {
+            "type": "string",
+            "example": "Loan Agreement"
+          },
+          "contractTitle": {
+            "type": "string",
+            "example": "สัญญาสินเชื่อบ้าน"
+          },
+          "loanType": {
+            "type": "string",
+            "example": "Home Loan",
+            "nullable": true
+          },
+          "creditLimit": {
+            "type": "number",
+            "format": "double",
+            "description": "Credit limit in Thai Baht",
+            "example": 3000000,
+            "nullable": true
+          },
+          "borrowerName": {
+            "type": "string",
+            "example": "นายสมชาย ใจดี",
+            "nullable": true
+          },
+          "borrowerType": {
+            "type": "string",
+            "example": "Primary Borrower",
+            "nullable": true
+          },
+          "documents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContractDocument"
+            }
+          },
+          "mortgageInfo": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "mortgageType": {
+                "type": "string",
+                "example": "Land and Building"
+              },
+              "titleDeedNumber": {
+                "type": "string",
+                "example": "1234/2566"
+              }
+            }
+          }
+        }
+      },
+      "ContractDocument": {
+        "type": "object",
+        "required": [
+          "documentId",
+          "documentName",
+          "documentUrl",
+          "reviewed"
+        ],
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "example": "DOC001"
+          },
+          "documentName": {
+            "type": "string",
+            "example": "สัญญาสินเชื่อบ้าน.pdf"
+          },
+          "documentUrl": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://example.com/documents/DOC001.pdf"
+          },
+          "reviewed": {
+            "type": "boolean",
+            "example": false
+          }
+        }
+      },
+      "JobInfoUpdateRequest": {
+        "type": "object",
+        "description": "Partial update request — only provided fields will be updated",
+        "properties": {
+          "generalInfo": {
+            "type": "object",
+            "properties": {
+              "branch": {
+                "type": "string",
+                "nullable": true
+              },
+              "loanContractDate": {
+                "type": "string",
+                "format": "date",
+                "nullable": true
+              },
+              "spouseConsentDate": {
+                "type": "string",
+                "format": "date",
+                "nullable": true
+              },
+              "guaranteeContractDate": {
+                "type": "string",
+                "format": "date",
+                "nullable": true
+              },
+              "mortgageDate": {
+                "type": "string",
+                "format": "date",
+                "nullable": true
+              },
+              "appraisalPrice": {
+                "type": "number",
+                "format": "double",
+                "nullable": true
+              },
+              "salePrice": {
+                "type": "number",
+                "format": "double",
+                "nullable": true
+              }
+            }
+          },
+          "cfaInfo": {
+            "type": "object",
+            "properties": {
+              "totalCreditOld": {
+                "type": "number",
+                "format": "double",
+                "nullable": true
+              },
+              "totalCreditNew": {
+                "type": "number",
+                "format": "double",
+                "nullable": true
+              },
+              "creditChange": {
+                "type": "number",
+                "format": "double",
+                "nullable": true
+              },
+              "cfaOldDate": {
+                "type": "string",
+                "format": "date",
+                "nullable": true
+              },
+              "cfaCurrentRound": {
+                "type": "integer",
+                "nullable": true
+              },
+              "debtPeriodOld": {
+                "type": "integer",
+                "nullable": true
+              },
+              "debtPeriodNew": {
+                "type": "integer",
+                "nullable": true
+              }
+            }
+          }
+        }
+      },
+      "JobContractsGetResponse": {
+        "type": "object",
+        "required": [
+          "jobId",
+          "contracts"
+        ],
+        "properties": {
+          "jobId": {
+            "type": "string",
+            "example": "ABC000000001"
+          },
+          "contracts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Contract"
+            }
+          }
+        }
+      },
+      "ContractReviewRequest": {
+        "type": "object",
+        "required": [
+          "reviewed"
+        ],
+        "properties": {
+          "reviewed": {
+            "type": "boolean",
+            "description": "Set to true to mark as reviewed, false to unmark",
+            "example": true
+          }
+        }
+      },
+      "ContractReviewResponse": {
+        "type": "object",
+        "required": [
+          "contractId",
+          "reviewed"
+        ],
+        "properties": {
+          "contractId": {
+            "type": "string",
+            "example": "CTR001"
+          },
+          "reviewed": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "placeholderImages": [
+    {
+      "id": "hero-1",
+      "description": "Modern office building with a group of professionals talking",
+      "imageUrl": "images/homeOverview.jpg",
+      "imageHint": "business meeting"
+    },
+    {
+      "id": "about-1",
+      "description": "Team of diverse professionals collaborating around a table",
+      "imageUrl": "images/homeServices.jpg",
+      "imageHint": "team collaboration"
+    },
+    {
+      "id": "contact-1",
+      "description": "Abstract image of communication lines and networks",
+      "imageUrl": "images/homeServices.jpg",
+      "imageHint": "global network"
+    },
+    {
+      "id": "team-member-1",
+      "description": "Professional headshot of a male team member",
+      "imageUrl": "images/homeServices.jpg",
+      "imageHint": "professional man"
+    },
+    {
+      "id": "team-member-2",
+      "description": "Professional headshot of a female team member",
+      "imageUrl": "images/homeServices.jpg",
+      "imageHint": "professional woman"
+    },
+    {
+      "id": "team-member-3",
+      "description": "Professional headshot of a team member",
+      "imageUrl": "images/homeServices.jpg",
+      "imageHint": "business person"
+    },
+    {
+      "id": "team-member-4",
+      "description": "Professional headshot of a senior team member",
+      "imageUrl": "images/homeServices.jpg",
+      "imageHint": "senior executive"
+    },
+    {
+      "id": "insight-1",
+      "description": "Close-up of a law book and gavel",
+      "imageUrl": "images/homeServices.jpg",
+      "imageHint": "legal concept"
+    },
+    {
+      "id": "insight-2",
+      "description": "Calculator and financial documents on a desk",
+      "imageUrl": "images/homeServices.jpg",
+      "imageHint": "financial analysis"
+    },
+    {
+      "id": "insight-3",
+      "description": "Skyscrapers in a modern city",
+      "imageUrl": "images/homeServices.jpg",
+      "imageHint": "urban cityscape"
+    },
+    {
+      "id": "service-accounting",
+      "description": "Calculator and ledger on a desk",
+      "imageUrl": "images/homeServices.jpg",
+      "imageHint": "accounting finance"
+    },
+    {
+      "id": "service-accounting-system",
+      "description": "Flowchart diagram on a whiteboard",
+      "imageUrl": "images/homeServices.jpg",
+      "imageHint": "system architecture"
+    },
+    {
+      "id": "service-legal-advisor",
+      "description": "Person signing a document with a lawyer",
+      "imageUrl": "images/homeServices.jpg",
+      "imageHint": "legal advice"
+    }
+  ]
+}
